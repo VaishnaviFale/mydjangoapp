@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mydjangoapp-ingress
+spec:
+  rules:
+  - host: mydjangoapp.local  # Use a valid domain name
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: mydjangoapp-service
+            port:
+              number: 80
+

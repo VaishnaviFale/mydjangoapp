@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mydjangoapp-deployment
+spec:
+  replicas: 2  # Adjust the number of replicas as needed
+  selector:
+    matchLabels:
+      app: mydjangoapp
+  template:
+    metadata:
+      labels:
+        app: mydjangoapp
+    spec:
+      containers:
+      - name: mydjangoapp
+        image: vaishnavifale/mydjangoapp:latest  # Change this to your Docker image name
+        ports:
+        - containerPort: 8000  # Change this if your Django app runs on a different port
+

@@ -1,0 +1,40 @@
+<!-- myapp/templates/myapp/hello_world.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            padding: 50px;
+        }
+
+        h1 {
+            color: #008080; /* Teal color */
+            font-size: 36px;
+            text-decoration: underline;
+        }
+         #marquee {
+            font-size: 36px;
+            color: black; /* Change the color as needed */
+        }
+
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-top: 20px;
+        }
+    </style>
+    <title>Hello World</title>
+</head>
+<body>
+    <marquee id="marquee">Hello World!</marquee>
+    <h1>{{ company_name }}</h1>
+    <p>{{ challenge_description | safe }}</p>
+</body>
+</html>
+
