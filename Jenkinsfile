@@ -7,7 +7,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout your source code from your version control system (e.g., Git)
-                git 'https://github.com/yourusername/your-repo.git'
+                git 'https://github.com/VaishnaviFale/mydjangoapp.git'
             }
         }
 
