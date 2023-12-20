@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         // Define environment variables
-        DOCKER_IMAGE = 'vaishnavifale/mydjangoapp:latest'
+       // DOCKER_IMAGE = 'vaishnavifale/mydjangoapp:latest'
     }
 
     stages {
@@ -17,9 +17,9 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 // Build your Docker image
-                script {
-                    docker.build DOCKER_IMAGE
-                }
+             //   script {
+             //       docker.build DOCKER_IMAGE
+             //   }
             }
         }
 
@@ -27,9 +27,9 @@ pipeline {
             steps {
                 // Run your tests (you might need additional steps based on your test framework)
                 script {
-                    docker.image(DOCKER_IMAGE).inside {
-                        sh 'python manage.py test'
-                    }
+                 //   docker.image(DOCKER_IMAGE).inside {
+                  //      sh 'python manage.py test'
+                 //   }
                 }
             }
         }
@@ -39,7 +39,7 @@ pipeline {
                 // Deploy your application to Minikube
                 script {
                     // Use kubectl commands to apply your Kubernetes manifests
-                    sh 'kubectl apply -f path/to/your/kubernetes/manifests'
+                   // sh 'kubectl apply -f path/to/your/kubernetes/manifests'
                 }
             }
         }
