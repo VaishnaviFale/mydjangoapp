@@ -39,8 +39,12 @@ pipeline {
 
         stage('Deploy to Minikube') {
             steps {
-                // Deploy your application to Minikube
-                 echo "Deploying..."
+                script {
+                    def kubeconfig = credentials('kubeconfig-id')  // Replace 'kubeconfig-id' with the ID of your Kubernetes credentials
+                    sh "kubectl --kubeconfig=${kubeconfig} apply -f deployment.yaml"
+                    sh "kubectl --kubeconfig=${kubeconfig} apply -f service.yaml"
+                    sh "kubectl --kubeconfig=${kubeconfig} apply -f ingress.yaml"
+                }
             }
         }
     }
