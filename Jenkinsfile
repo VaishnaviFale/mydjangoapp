@@ -15,7 +15,7 @@ pipeline {
             steps {
                 script {
                     // Define Docker image name and tag
-                    def dockerImage = 'vaishnavifale/mydjangoapp:latest:${env.BUILD_NUMBER}'
+                    def dockerImage = "vaishnavifale/mydjangoapp:latest:${env.BUILD_NUMBER}"
                     echo "Building Docker image: ${dockerImage}"
 
                     // Build Docker image
