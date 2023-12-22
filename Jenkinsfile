@@ -11,11 +11,21 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build and Push Docker Image') {
             steps {
-                echo "building..."
+                script {
+                    // Define Docker image name and tag
+                    def dockerImage = 'vaishnavifale/mydjangoapp:latest'
+
+                    // Build Docker image
+                    docker.build dockerImage, '-f Dockerfile .'
+
+                    // Push Docker image to Docker Hub
+                    docker.withRegistry('https://registry-1.docker.io', 'docker-hub-credentials') {
+                        docker.image(dockerImage).push()
+                    }
+                }
             }
-        }
 
         stage('Run Tests') {
             steps {
