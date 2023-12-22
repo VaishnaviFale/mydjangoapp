@@ -52,6 +52,8 @@ pipeline {
                     sh "kubectl --kubeconfig='${KUBECONFIG}' apply -f service.yaml"
                     sh "kubectl --kubeconfig='${KUBECONFIG}' apply -f ingress.yaml"
 
+                    }    
+
                     sh 'echo "Debug information"'
 
                     
