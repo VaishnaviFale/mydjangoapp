@@ -16,12 +16,14 @@ pipeline {
                 script {
                     // Define Docker image name and tag
                     def dockerImage = 'vaishnavifale/mydjangoapp:latest'
+                    echo "Building Docker image: ${dockerImage}"
 
                     // Build Docker image
                     docker.build dockerImage, '-f Dockerfile .'
 
                     // Push Docker image to Docker Hub
                     docker.withRegistry('https://registry-1.docker.io', 'docker-hub-credentials') {
+                        echo "Pushing Docker image: ${dockerImage}"
                         docker.image(dockerImage).push()
                     }
                 }
