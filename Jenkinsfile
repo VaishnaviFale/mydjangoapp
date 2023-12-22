@@ -22,7 +22,7 @@ pipeline {
                     docker.build dockerImage, '-f Dockerfile .'
 
                     // Push Docker image to Docker Hub
-                    docker.withRegistry('https://index.docker.io/v1/', 'vaishnavifale') {
+                    docker.withRegistry('https://index.docker.io/v1/', 'vaishnavifale-docker-hub-credentials') {
                         echo "Pushing Docker image: ${dockerImage}"
                         docker.image(dockerImage).push()
                     }
