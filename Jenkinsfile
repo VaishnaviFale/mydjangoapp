@@ -45,12 +45,12 @@ pipeline {
                     
                     //def kubeconfig = credentials('kubeconfig-id')  // Replace 'kubeconfig-id' with the ID of your Kubernetes credentials
 
-                    sh 'echo "End of Debug information"'
-                    
-                    withCredentials([file(credentialsId: 'kubeconfig-id', variable: 'KUBECONFIG')]) {
-                    sh "kubectl --kubeconfig='${KUBECONFIG}' apply -f deployment.yaml"
-                    sh "kubectl --kubeconfig='${KUBECONFIG}' apply -f service.yaml"
-                    sh "kubectl --kubeconfig='${KUBECONFIG}' apply -f ingress.yaml"
+                         withCredentials([file(credentialsId: 'kubeconfig-id', variable: 'KUBECONFIG')]) {
+                         sh "kubectl --kubeconfig=${KUBECONFIG} apply -f deployment.yaml"
+                         sh "kubectl --kubeconfig=${KUBECONFIG} apply -f service.yaml"
+                         sh "kubectl --kubeconfig=${KUBECONFIG} apply -f ingress.yaml"
+
+                             sh 'echo "End of Debug information"'
 
                     }    
 
