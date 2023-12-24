@@ -52,6 +52,7 @@ pipeline {
                     sh 'echo "Testing ended."'
                 }
         }
+        }
 
         stage('Deploy to Minikube') {
             steps {
