@@ -32,6 +32,15 @@ pipeline {
         }
 
         stage('Run Tests') {
+            steps {
+                script {
+                    sh 'pip install pytest'
+                    sh 'pytest test_example.py'
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
             steps  {
                 script {
                     sh 'echo "Testing started.."'
