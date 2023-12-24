@@ -12,7 +12,7 @@ pipeline {
             }
         }
 
-        stage('Build and Push Docker Image') {
+        /* stage('Build and Push Docker Image') {
             steps {
                 script {
                     // Define Docker image name and tag
@@ -29,13 +29,27 @@ pipeline {
                     }
                 }
             }
-        }
+        } */
 
         stage('Run Tests') {
             steps {
                 script {
+                    ///sh 'pip install pytest'
+                    //sh 'pytest test_example.py'
+                    // Create a virtual environment
+                    sh 'python3 -m venv venv'
+                    
+                    // Activate the virtual environment
+                    sh 'source venv/bin/activate'
+                    
+                    // Install pytest in the virtual environment
                     sh 'pip install pytest'
+                    
+                    // Run pytest
                     sh 'pytest test_example.py'
+                    
+                    // Deactivate the virtual environment
+                    sh 'deactivate'
                 }
             }
         }
