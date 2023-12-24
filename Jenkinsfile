@@ -37,22 +37,17 @@ pipeline {
                     ///sh 'pip install pytest'
                     //sh 'pytest test_example.py'
                      // Install python3-venv package with sudo
-                    sh 'sudo apt install -y python3.11-venv'
+    sh 'sudo apt install -y python3.11-venv'
+
+    // Create a virtual environment, activate it, and run subsequent commands
+    sh '''
+        /usr/bin/python3.11 -m venv venv
+        source venv/bin/activate
+        pip install pytest
+        pytest test_example.py
+        deactivate
+    '''
                     
-                    // Create a virtual environment
-                    sh '/usr/bin/python3.11 -m venv venv'
-                    
-                    // Activate the virtual environment
-                    sh 'source venv/bin/activate'
-                    
-                    // Install pytest in the virtual environment
-                    sh 'pip install pytest'
-                    
-                    // Run pytest
-                    sh 'pytest test_example.py'
-                    
-                    // Deactivate the virtual environment
-                    sh 'deactivate'
                 }
             }
         }
