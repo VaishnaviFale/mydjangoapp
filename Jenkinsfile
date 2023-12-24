@@ -42,7 +42,7 @@ pipeline {
     // Create a virtual environment, activate it, and run subsequent commands
     sh '''
         /usr/bin/python3.11 -m venv venv
-        source venv/bin/activate
+        . venv/bin/activate
         pip install pytest
         pytest test_example.py
         deactivate
