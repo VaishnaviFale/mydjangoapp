@@ -37,7 +37,7 @@ pipeline {
                     sh 'echo "Testing started.."'
                     
                     def scannerHome = tool 'SonarQube Scanner'
-                    withSonarQubeEnv('Your SonarQube Server Configuration') {
+                    withSonarQubeEnv('SonarQube') {
                         sh "${scannerHome}/bin/sonar-scanner"
                     }
                     sh 'echo "Testing ended."'
