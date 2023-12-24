@@ -32,10 +32,16 @@ pipeline {
         }
 
         stage('Run Tests') {
-            steps {
-                // Run your tests (you might need additional steps based on your test framework)
-               echo "Testing..."
-            }
+            steps  {
+                script {
+                    sh 'echo "Testing started.."'
+                    
+                    def scannerHome = tool 'SonarQube Scanner'
+                    withSonarQubeEnv('Your SonarQube Server Configuration') {
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
+                    sh 'echo "Testing ended."'
+                }
         }
 
         stage('Deploy to Minikube') {
