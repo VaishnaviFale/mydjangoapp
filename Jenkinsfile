@@ -36,8 +36,8 @@ pipeline {
                 script {
                     ///sh 'pip install pytest'
                     //sh 'pytest test_example.py'
-                    // Install python3-venv package
-                    sh 'apt install -y python3.11-venv'
+                     // Install python3-venv package with sudo
+                    sh 'sudo apt install -y python3.11-venv'
                     
                     // Create a virtual environment
                     sh '/usr/bin/python3.11 -m venv venv'
