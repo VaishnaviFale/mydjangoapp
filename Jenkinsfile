@@ -66,7 +66,7 @@ pipeline {
         stage('Activate Virtual Environment') {
             steps {
                 script {
-                    sh 'source venv/bin/activate'
+                    sh '. venv/bin/activate'
                 }
             }
         }
