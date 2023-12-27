@@ -12,7 +12,7 @@ pipeline {
             }
         }
 
-        /* stage('Build and Push Docker Image') {
+        stage('Build and Push Docker Image') {
             steps {
                 script {
                     // Define Docker image name and tag
@@ -29,7 +29,7 @@ pipeline {
                     }
                 }
             }
-        } */
+        } 
 
         stage('Run Tests') {
             steps {
