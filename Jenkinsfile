@@ -88,7 +88,7 @@ pipeline {
 
         
 
-        stage('SonarQube Analysis') {
+        stage('SonarQube Analysis-2') {
             steps  {
                 script {
                     sh 'echo "Testing started.."'
