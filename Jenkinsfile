@@ -55,47 +55,36 @@ pipeline {
 
         
         
-stage('Create and Activate Virtual Environment') {
+stage('Build, Test, and Analyze') {
             steps {
-                script {
-                    // Create and activate the virtual environment
-                    sh 'python3 -m venv venv'
-                    sh 'source venv/bin/activate'
-                }
-            }
-        }
+                // Checkout your code from Git
+                checkout scm
 
-        stage('Install Requirements') {
-            steps {
-                script {
-                    // Install requirements
-                    sh 'pip install --no-cache-dir -r requirements.txt'
-                }
-            }
-        }
+                // Create virtual environment
+                sh 'python -m venv venv'
 
-        stage('Build and Test') {
-            steps {
-                script {
-                    // Build and run tests
-                    sh 'coverage run --source=. manage.py test'
-                    sh 'coverage xml -o coverage.xml'
-                }
-            }
-        }
+                // Activate virtual environment
+                sh 'source venv/bin/activate'
 
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    // Run SonarQube analysis
-                    def scannerHome = tool 'sonar-scanner'
-                    withSonarQubeEnv('SonarQube Server') {
-                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=myproject -Dsonar.projectName='My Project' -Dsonar.projectVersion=1.0 -Dsonar.sources=. -Dsonar.tests=. -Dsonar.language=python -Dsonar.sourceEncoding=UTF-8 -Dsonar.python.coverage.reportPaths=coverage.xml"
-                    }
+                // Install requirements
+                sh 'pip install --no-cache-dir -r requirements.txt'
+
+                // Build and run your tests with coverage
+                sh 'coverage run --source=. manage.py test'
+                sh 'coverage xml -o coverage.xml'
+
+                // Run SonarQube analysis
+                def scannerHome = tool 'sonar-scanner'
+                withSonarQubeEnv('SonarQube Server') {
+                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=myproject -Dsonar.projectName='My Project' -Dsonar.projectVersion=1.0 -Dsonar.sources=. -Dsonar.tests=. -Dsonar.language=python -Dsonar.sourceEncoding=UTF-8 -Dsonar.python.coverage.reportPaths=coverage.xml"
                 }
+
+                // Deactivate virtual environment
+                sh 'deactivate'
+
+                // Add deployment steps if needed
             }
         }
-    }
     
 
 
@@ -137,6 +126,14 @@ stage('Create and Activate Virtual Environment') {
 
                     
                 }
+            }
+        }
+    }
+     post {
+        always {
+            // Deactivate the virtual environment
+            script {
+                sh 'unset PYTHON_VENV_PATH'
             }
         }
     }
