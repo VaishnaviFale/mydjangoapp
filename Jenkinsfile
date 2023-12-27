@@ -78,7 +78,7 @@ pipeline {
                 // Run SonarQube analysis
                 script {
                     def scannerHome = tool 'sonar-scanner'
-                    withSonarQubeEnv('SonarQube Server') {
+                    withSonarQubeEnv('sonar-scanner') {
                         sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=myproject -Dsonar.projectName='My Project' -Dsonar.projectVersion=1.0 -Dsonar.sources=. -Dsonar.tests=. -Dsonar.language=python -Dsonar.sourceEncoding=UTF-8 -Dsonar.python.coverage.reportPaths=coverage.xml"
                     }
                 }
