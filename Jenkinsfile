@@ -55,36 +55,38 @@ pipeline {
 
         
         
-stage('Build, Test, and Analyze') {
-            steps {
-                // Checkout your code from Git
-                checkout scm
+       stage('Build, Test, and Analyze') {
+    steps {
+        // Checkout your code from Git
+        checkout scm
 
-                // Create virtual environment
-                sh 'python -m venv venv'
+        // Create virtual environment
+        sh 'python -m venv venv'
 
-                // Activate virtual environment
-                sh 'source venv/bin/activate'
+        // Activate virtual environment
+        sh 'source venv/bin/activate'
 
-                // Install requirements
-                sh 'pip install --no-cache-dir -r requirements.txt'
+        // Install requirements
+        sh 'pip install --no-cache-dir -r requirements.txt'
 
-                // Build and run your tests with coverage
-                sh 'coverage run --source=. manage.py test'
-                sh 'coverage xml -o coverage.xml'
+        // Build and run your tests with coverage
+        sh 'coverage run --source=. manage.py test'
+        sh 'coverage xml -o coverage.xml'
 
-                // Run SonarQube analysis
-                def scannerHome = tool 'sonar-scanner'
-                withSonarQubeEnv('SonarQube Server') {
-                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=myproject -Dsonar.projectName='My Project' -Dsonar.projectVersion=1.0 -Dsonar.sources=. -Dsonar.tests=. -Dsonar.language=python -Dsonar.sourceEncoding=UTF-8 -Dsonar.python.coverage.reportPaths=coverage.xml"
-                }
-
-                // Deactivate virtual environment
-                sh 'deactivate'
-
-                // Add deployment steps if needed
+        // Run SonarQube analysis
+        script {
+            def scannerHome = tool 'sonar-scanner'
+            withSonarQubeEnv('SonarQube Server') {
+                sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=myproject -Dsonar.projectName='My Project' -Dsonar.projectVersion=1.0 -Dsonar.sources=. -Dsonar.tests=. -Dsonar.language=python -Dsonar.sourceEncoding=UTF-8 -Dsonar.python.coverage.reportPaths=coverage.xml"
             }
         }
+
+        // Deactivate virtual environment
+        sh 'deactivate'
+
+        // Add deployment steps if needed
+    }
+}
     
 
 
