@@ -54,8 +54,8 @@ pipeline {
 
 
         
+        
 
-        stages {
         stage('Create and Activate Virtual Environment') {
             steps {
                 script {
@@ -105,7 +105,7 @@ pipeline {
                 sh 'unset PYTHON_VENV_PATH'
             }
         }
-    }
+    
 
 
 
