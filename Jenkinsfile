@@ -3,7 +3,7 @@ pipeline {
     agent any
 
     tools {
-        sonarQubeScanner 'sonar-scanner'
+        sonarScanner 'sonar-scanner'
     }
 
     stages {
