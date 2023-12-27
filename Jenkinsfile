@@ -92,20 +92,6 @@ stage('Build, Test, and Analyze') {
 
         
 
-        stage('SonarQube Analysis-2') {
-            steps  {
-                script {
-                    sh 'echo "Testing started.."'
-                    
-                    def scannerHome = tool 'SonarQube'
-                    withSonarQubeEnv('SonarQube') {
-                        sh "${scannerHome}/bin/sonar-scanner"
-                    }
-                    sh 'echo "Testing ended."'
-                }
-        }
-        }
-
         stage('Deploy to Minikube') {
             steps {
                 script {
