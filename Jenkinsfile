@@ -55,11 +55,33 @@ pipeline {
 
         
 
-        stage('Build and Test') {
+        stage('Create Virtual Environment') {
             steps {
-                // Build and run your tests with coverage
+                script {
+                    sh 'python -m venv venv'
+                }
+            }
+        }
+
+        stage('Activate Virtual Environment') {
+            steps {
+                script {
+                    sh 'source venv/bin/activate'
+                }
+            }
+        }
+
+        stage('Install Requirements') {
+            steps {
                 script {
                     sh 'pip install --no-cache-dir -r requirements.txt'
+                }
+            }
+        }
+
+        stage('Build and Test') {
+            steps {
+                script {
                     sh 'coverage run --source=. manage.py test'
                     sh 'coverage xml -o coverage.xml'
                 }
@@ -68,12 +90,19 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                // Run SonarQube analysis with directly referencing sonar-project.properties
                 script {
                     def scannerHome = tool 'sonar-scanner'
                     withSonarQubeEnv('SonarQube Server') {
                         sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=myproject -Dsonar.projectName='My Project' -Dsonar.projectVersion=1.0 -Dsonar.sources=. -Dsonar.tests=. -Dsonar.language=python -Dsonar.sourceEncoding=UTF-8 -Dsonar.python.coverage.reportPaths=coverage.xml"
                     }
+                }
+            }
+        }
+
+        stage('Deactivate Virtual Environment') {
+            steps {
+                script {
+                    sh 'deactivate'
                 }
             }
         }
