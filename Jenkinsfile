@@ -61,17 +61,14 @@ pipeline {
         checkout scm
 
         // Create virtual environment
-        sh 'python3 -m venv venv'
+        script {
+            sh 'python3 -m venv venv'
+        }
 
-        // Activate virtual environment
-        sh '. venv/bin/activate'
-
-        // Install requirements
-        sh 'pip install --no-cache-dir -r requirements.txt'
-
-        // Build and run your tests with coverage
-        sh 'coverage run --source=. manage.py test'
-        sh 'coverage xml -o coverage.xml'
+        // Activate virtual environment and run subsequent commands
+        script {
+            sh '. venv/bin/activate && pip install --no-cache-dir -r requirements.txt && coverage run --source=. manage.py test && coverage xml -o coverage.xml'
+        }
 
         // Run SonarQube analysis
         script {
@@ -81,8 +78,10 @@ pipeline {
             }
         }
 
-        // Deactivate virtual environment
-        sh 'deactivate'
+        // Deactivate virtual environment (this might not be necessary)
+        script {
+            sh 'deactivate'
+        }
 
         // Add deployment steps if needed
     }
