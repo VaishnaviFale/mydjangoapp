@@ -52,6 +52,42 @@ pipeline {
             }
         }
 
+
+        
+
+               stage('Build and Test') {
+            steps {
+                // Build and run your tests with coverage
+                script {
+                    sh 'pip install --no-cache-dir -r requirements.txt'
+                    sh 'coverage run --source=<your_project_directory> manage.py test'
+                    sh 'coverage xml -o coverage.xml'
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                // Copy sonar-project.properties file to workspace
+                script {
+                    sh 'cp path/to/sonar-project.properties .'
+                }
+
+                // Run SonarQube analysis
+                script {
+                    def scannerHome = tool 'sonar-scanner'
+                    withSonarQubeEnv('SonarQube Server') {
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
+                }
+            }
+        }
+
+
+
+
+        
+
         stage('SonarQube Analysis') {
             steps  {
                 script {
