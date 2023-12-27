@@ -61,10 +61,10 @@ pipeline {
         checkout scm
 
         // Create virtual environment
-        sh 'python -m venv venv'
+        sh 'python3 -m venv venv'
 
         // Activate virtual environment
-        sh 'source venv/bin/activate'
+        sh '. venv/bin/activate'
 
         // Install requirements
         sh 'pip install --no-cache-dir -r requirements.txt'
