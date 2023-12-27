@@ -55,13 +55,12 @@ pipeline {
 
         
         
-
-        stage('Create and Activate Virtual Environment') {
+stage('Create and Activate Virtual Environment') {
             steps {
                 script {
                     // Create and activate the virtual environment
                     sh 'python3 -m venv venv'
-                    sh '. venv/bin/activate'
+                    sh 'source venv/bin/activate'
                 }
             }
         }
@@ -97,14 +96,6 @@ pipeline {
             }
         }
     }
-
-    post {
-        always {
-            // Deactivate the virtual environment
-            script {
-                sh 'unset PYTHON_VENV_PATH'
-            }
-        }
     
 
 
@@ -149,4 +140,14 @@ pipeline {
             }
         }
     }
+
+post {
+        always {
+            // Deactivate the virtual environment
+            script {
+                sh 'unset PYTHON_VENV_PATH'
+            }
+        }
+    }
+
 }
