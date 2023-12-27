@@ -55,17 +55,12 @@ pipeline {
 
         
 
-        stage('Create Virtual Environment') {
+        stages {
+        stage('Create and Activate Virtual Environment') {
             steps {
                 script {
+                    // Create and activate the virtual environment
                     sh 'python3 -m venv venv'
-                }
-            }
-        }
-
-        stage('Activate Virtual Environment') {
-            steps {
-                script {
                     sh '. venv/bin/activate'
                 }
             }
@@ -74,6 +69,7 @@ pipeline {
         stage('Install Requirements') {
             steps {
                 script {
+                    // Install requirements
                     sh 'pip install --no-cache-dir -r requirements.txt'
                 }
             }
@@ -82,6 +78,7 @@ pipeline {
         stage('Build and Test') {
             steps {
                 script {
+                    // Build and run tests
                     sh 'coverage run --source=. manage.py test'
                     sh 'coverage xml -o coverage.xml'
                 }
@@ -91,6 +88,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
+                    // Run SonarQube analysis
                     def scannerHome = tool 'sonar-scanner'
                     withSonarQubeEnv('SonarQube Server') {
                         sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=myproject -Dsonar.projectName='My Project' -Dsonar.projectVersion=1.0 -Dsonar.sources=. -Dsonar.tests=. -Dsonar.language=python -Dsonar.sourceEncoding=UTF-8 -Dsonar.python.coverage.reportPaths=coverage.xml"
@@ -98,14 +96,16 @@ pipeline {
                 }
             }
         }
+    }
 
-        stage('Deactivate Virtual Environment') {
-            steps {
-                script {
-                    sh 'deactivate'
-                }
+    post {
+        always {
+            // Deactivate the virtual environment
+            script {
+                sh 'unset PYTHON_VENV_PATH'
             }
         }
+    }
 
 
 
