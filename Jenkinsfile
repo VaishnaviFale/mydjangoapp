@@ -140,14 +140,4 @@ stage('Create and Activate Virtual Environment') {
             }
         }
     }
-
-post {
-        always {
-            // Deactivate the virtual environment
-            script {
-                sh 'unset PYTHON_VENV_PATH'
-            }
-        }
-    }
-
 }
