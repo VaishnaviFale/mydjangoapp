@@ -65,9 +65,20 @@ pipeline {
             sh 'python3 -m venv venv'
         }
 
-        // Activate virtual environment and run subsequent commands
+        // Activate virtual environment and install requirements
         script {
-            sh '. venv/bin/activate && pip install --no-cache-dir -r requirements.txt && coverage run --source=. manage.py test && coverage xml -o coverage.xml'
+            sh '. venv/bin/activate && pip install --no-cache-dir -r requirements.txt'
+        }
+
+        // Install coverage in the virtual environment
+        script {
+            sh '. venv/bin/activate && pip install coverage'
+        }
+
+        // Build and run your tests with coverage
+        script {
+            sh 'coverage run --source=. manage.py test'
+            sh 'coverage xml -o coverage.xml'
         }
 
         // Run SonarQube analysis
@@ -86,6 +97,7 @@ pipeline {
         // Add deployment steps if needed
     }
 }
+
     
 
 
