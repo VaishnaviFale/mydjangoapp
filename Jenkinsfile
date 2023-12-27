@@ -2,9 +2,9 @@
 pipeline {
     agent any
 
-    environment {
-        scannerHome = tool 'sonar-scanner'
-    }
+    // environment {
+    //    scannerHome = tool 'sonar-scanner'
+  //  }
 
     stages {
         stage('Checkout') {
