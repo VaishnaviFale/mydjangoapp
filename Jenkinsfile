@@ -108,12 +108,14 @@ pipeline {
       }
     }
   }
-  */post {
+  */
+  post {
   always {
     // Deactivate the virtual environment
     script {
       sh 'deactivate'
     }
   }
-}*/
+}
+  */
 }
