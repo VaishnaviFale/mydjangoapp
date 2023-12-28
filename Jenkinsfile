@@ -44,15 +44,13 @@ pipeline {
           sh 'sudo apt install -y python3.11-venv'
 
           // Create a virtual environment, activate it, and run subsequent commands
-          sh ''
-          ' /
-          usr / bin / python3 .11 - m venv venv
-            .venv / bin / activate
-          pip install pytest
-          pytest test_example.py
-          deactivate
-            ''
-          '
+        sh '''
+        /usr/bin/python3.11 -m venv venv
+        . venv/bin/activate
+        pip install pytest
+        pytest test_example.py
+        deactivate
+        '''
 
         }
       }
