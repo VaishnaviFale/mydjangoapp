@@ -108,7 +108,7 @@ pipeline {
       }
     }
   }
-  */
+  /*
   post {
   always {
     // Deactivate the virtual environment
