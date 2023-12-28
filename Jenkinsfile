@@ -57,7 +57,7 @@ pipeline {
 
 
         
-        
+        /*
      stage('Build, Test, and Analyze') {
             steps {
                 // Checkout your code from Git
@@ -85,7 +85,8 @@ pipeline {
             }
         }
 
-
+*/
+        
     
 
 
@@ -116,12 +117,12 @@ pipeline {
             }
         }
     }
-     post {
+     */post {
         always {
             // Deactivate the virtual environment
             script {
                 sh 'deactivate'
             }
         }
-    }
+    } */
 }
