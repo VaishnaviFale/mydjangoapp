@@ -1,5 +1,7 @@
 # myapp/views.py
 from django.http import HttpResponse
+from django.views import View
+from .metrics import requests_counter, request_duration
 
 # myapp/views.py
 from django.shortcuts import render
@@ -18,4 +20,11 @@ def hello_world(request):
 
     # Render the template with the provided context
     return render(request, 'myapp/hello_world.html', context)
+
+class MyView(View):
+    @request_duration.time()
+    def get(self, request, *args, **kwargs):
+        # Your view logic here
+        requests_counter.inc()
+        return HttpResponse("Hello, world!")
 
