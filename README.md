@@ -58,7 +58,7 @@ Create a Dockerfile to containerize the Django application.
 
 ```Dockerfile
 # Use an official Python runtime as a parent image
-FROM python:3.8
+FROM python:3.8-slim
 
 # Set the working directory to /app
 WORKDIR /app
@@ -67,16 +67,25 @@ WORKDIR /app
 COPY . /app
 
 # Install any needed packages specified in requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Make port 8000 available to the world outside this container
+# Expose port 8000 for the Django application
 EXPOSE 8000
 
-# Define environment variable
-ENV NAME World
+# Define environment variables for Python to run in unbuffered mode
+ENV PYTHONUNBUFFERED 1
 
-# Run app.py when the container launches
-CMD ["python", "app.py"]
+# Set the STATIC_ROOT environment variable
+ENV STATIC_ROOT /app/staticfiles
+
+# Run collectstatic to collect static files
+RUN python manage.py collectstatic --noinput
+
+# Install Gunicorn
+RUN pip install gunicorn
+
+# Command to run your application using Gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "mysite.wsgi:application"]
 ```
 
 ### Build and Run:
