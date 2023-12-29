@@ -275,12 +275,13 @@ helm install prometheus prometheus-community/kube-prometheus-stack -n monitoring
 helm install grafana grafana/grafana -n monitoring
 ```
 
-### Step 4: Port-forward Grafana
+### Step 4: Port-forward 
 
 ```bash
+kubectl port-forward svc/prometheus-kube-prometheus-prometheus -n default 9090
 kubectl port-forward -n monitoring svc/grafana 3000:80
 ```
-
+Access Grafana at http://localhost:9090 
 Access Grafana at http://localhost:3000 (default credentials: admin/admin).
 
 ## Logging Setup
