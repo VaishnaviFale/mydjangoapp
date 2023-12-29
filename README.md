@@ -12,8 +12,8 @@ This project showcases the end-to-end process of creating a Python Django web ap
 - [Step 3: Set Up Minikube Kubernetes Cluster](#step-3-set-up-minikube-kubernetes-cluster)
 - [Step 4: Deploy Python Django Web Application on Minikube Kubernetes](#step-4-deploy-python-django-web-application-on-minikube-kubernetes)
 - [Step 5: Implement Jenkins CI/CD Pipeline](#step-5-implement-jenkins-ci/cd-pipeline)
-- [CI/CD Pipeline Workflow](#ci/cd-pipeline-workflow)
-- [Monitoring and Logging Setup (Optional)](#monitoring-and-logging-setup-optional)
+   [CI/CD Pipeline Workflow](#ci/cd-pipeline-workflow)
+- [Step 6: Monitoring and Logging Setup](#monitoring-and-logging-setup-optional)
 
 ## Prerequisites
 
@@ -201,54 +201,87 @@ Set up Jenkins and configure a CI/CD pipeline to automate Docker builds and Kube
 ### Jenkins Pipeline:
 
 ```groovy
-pipeline {
-    agent any
-    
-    stages {
-        stage('Build and Push Docker Image') {
-            steps {
-                script {
-                    def dockerImage = "mydjangoapp:${env.BUILD_NUMBER}"
-                    docker.build dockerImage
-                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
-                        docker.image(dockerImage).push()
-                    }
-                }
-            }
-        }
-        
-        stage('Run Tests') {
-            steps {
-                script {
-                    echo "Running tests..."
-                    # Add your test commands here
-                }
-            }
-        }
+#!/usr/bin/env groovy
 
-        stage('Deploy to Minikube') {
-            steps {
-                script {
-                    def kubeconfig = credentials('kubeconfig-id')
-                    withCredentials([file(credentialsId: 'kubeconfig-id', variable: 'KUBECONFIG')]) {
-                        sh "kubectl --kubeconfig='${KUBECONFIG}' apply -f deployment.yaml"
-                        sh "kubectl --kubeconfig='${KUBECONFIG}' apply -f service.yaml"
-                        sh "kubectl --kubeconfig='${KUBECONFIG}' apply -f ingress.yaml"
-                    }
-                }
-            }
-        }
+pipeline {
+  agent any
+
+  stages {
+    stage('Checkout') {
+      steps {
+        // Checkout your source code from your version control system (e.g., Git)
+        git 'https://github.com/VaishnaviFale/mydjangoapp.git'
+      }
     }
+
+    stage('Build and Push Docker Image') {
+      steps {
+        script {
+          // Define Docker image name and tag
+          def dockerImage = 'vaishnavifale/mydjangoapp:latest'
+          echo "Building Docker image: ${dockerImage}"
+
+          // Build Docker image
+          docker.build dockerImage, '-f Dockerfile .'
+
+          // Push Docker image to Docker Hub
+          docker.withRegistry('https://index.docker.io/v1/', 'vaishnavifale-docker-hub-credentials') {
+            echo "Pushing Docker image: ${dockerImage}"
+            docker.image(dockerImage).push()
+          }
+        }
+      }
+    }
+
+    stage('Run Tests') {
+      steps {
+        script {
+          
+          sh 'sudo apt install -y python3.11-venv'
+          // Create a virtual environment, activate it, and run subsequent commands
+        sh '''
+        /usr/bin/python3.11 -m venv venv
+        . venv/bin/activate
+        pip install pytest
+        pytest test_example.py
+        deactivate
+        '''
+
+        }
+      }
+    }
+
+    stage('Deploy to Minikube') {
+      steps {
+        script {
+          sh 'echo "Debug information"'
+
+          withCredentials([file(credentialsId: 'kubeconfig-id', variable: 'KUBECONFIG')]) {
+            sh "kubectl --kubeconfig=${KUBECONFIG} apply -f deployment.yaml"
+            sh "kubectl --kubeconfig=${KUBECONFIG} apply -f service.yaml"
+            sh "kubectl --kubeconfig=${KUBECONFIG} apply -f ingress.yaml"
+
+            sh 'echo "End of Debug information"'
+
+          }
+
+          sh 'echo "DONE"'
+
+        }
+      }
+    }
+  }
 }
 ```
 
 ### CI/CD Pipeline Workflow:
 
-1. **Build Docker Image:** Build the Docker image from the Django application code.
-2. **Run Tests:** Validate the application's functionality.
-3. **Deploy to Minikube:** Deploy the Django application to the Minikube Kubernetes cluster.
+1. **Checkout:** Checkout source code from GitHub
+2. **Build and Push Docker Image:** Build the Docker image from the Django application code, Push Docker image to Docker Hub
+3. **Run Tests:** Validate the application's functionality.
+4. **Deploy to Minikube:** Deploy the Django application to the Minikube Kubernetes cluster.
 
-## Monitoring and Logging Setup (Optional)
+## Monitoring and Logging Setup 
 
 ```markdown
 # Minikube Monitoring and Logging Setup
@@ -291,6 +324,7 @@ kubectl port-forward svc/prometheus-kube-prometheus-prometheus -n default 9090
 kubectl port-forward -n monitoring svc/grafana 3000:80
 ```
 Access Grafana at http://localhost:9090 
+
 Access Grafana at http://localhost:3000 (default credentials: admin/admin).
 
 ## Logging Setup
@@ -365,7 +399,6 @@ minikube stop
 minikube delete
 ```
 
-```
 
 
 
