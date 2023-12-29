@@ -241,8 +241,121 @@ pipeline {
 
 ## Monitoring and Logging Setup (Optional)
 
-(Optional) Include information on setting up monitoring and logging for the deployed Django application.
+```markdown
+# Minikube Monitoring and Logging Setup
 
+## Overview
+
+Guide for setting up monitoring and centralized logging in a Minikube environment. The setup includes the following components:
+
+- **Monitoring:** Utilizing Prometheus for metric collection and Grafana for visualization.
+- **Logging:** Implementing centralized logging with Elasticsearch for log storage and Kibana for log visualization.
+
+
+## Monitoring Setup
+
+### Step 1: Start Minikube
+
+```bash
+minikube start
+```
+
+### Step 2: Add Helm Repositories
+
+```bash
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+```
+
+### Step 3: Install Prometheus and Grafana
+
+```bash
+helm install prometheus prometheus-community/kube-prometheus-stack -n monitoring
+helm install grafana grafana/grafana -n monitoring
+```
+
+### Step 4: Port-forward Grafana
+
+```bash
+kubectl port-forward -n monitoring svc/grafana 3000:80
+```
+
+Access Grafana at http://localhost:3000 (default credentials: admin/admin).
+
+## Logging Setup
+
+### Step 1: Install Elasticsearch Operator
+
+```bash
+helm install elastic-operator elastic/eck-operator -n elastic-system --create-namespace
+```
+
+### Step 2: Install Elasticsearch
+
+Create `elasticsearch.yaml`:
+
+```yaml
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: quickstart
+spec:
+  version: 7.15.2
+  nodeSets:
+  - name: default
+    count: 1
+    config:
+      node.master: true
+      node.data: true
+      node.ingest: true
+      node.store.allow_mmap: false
+```
+
+Apply the custom resource:
+
+```bash
+kubectl apply -f elasticsearch.yaml
+```
+
+### Step 3: Install Kibana
+
+Create `kibana.yaml`:
+
+```yaml
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: quickstart
+spec:
+  version: 7.15.2
+  count: 1
+  elasticsearchRef:
+    name: quickstart
+```
+
+Apply the custom resource:
+
+```bash
+kubectl apply -f kibana.yaml
+```
+
+### Step 4: Port-forward Kibana
+
+```bash
+kubectl port-forward -n elastic-system svc/kibana-quickstart-kb-http 5601:5601
+```
+
+Access Kibana at http://localhost:5601.
+
+## Clean Up
+
+```bash
+minikube stop
+minikube delete
+```
+
+```
 
 
 
